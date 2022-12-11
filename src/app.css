@@ -1,0 +1,9 @@
+* {
+  font-family: "Roboto Slab", serif;
+}
+
+.App {
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+}
