@@ -1,23 +1,108 @@
 import { useState } from "react";
 import { BiMap } from "react-icons/bi";
+import uuid from "react-uuid";
+
+const weekday = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 function WeatherDetails(props) {
-  const data = props.data;
+  const { tab, data } = props;
+  let forcast = null;
+  let currentDay = [];
+  let currentDayHour = null;
+  let otherDays = [];
+  let otherDaysDiv = [];
 
-  const weekday = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  if (tab === "forecast" && data) {
+    forcast = data.forecast.forecastday;
 
-  const date = new Date(data.current.last_updated);
+    forcast[0].hour.forEach((item) => {
+      let date = new Date(item.time);
+      var time = date.toLocaleString([], {
+        hour: "2-digit",
+      });
+
+      currentDay.push(
+        <div>
+          <div className="div" id={uuid()}>
+            <span style={{ fontSize: "12px" }}>{time}</span>
+            <img src={item.condition.icon} alt="img" id={uuid()} />
+            <span style={{ fontSize: "12px", fontWeight: "500" }}>
+              {item.condition.text}
+            </span>
+            <div
+              className="w-100 d-flex flex-row justify-content-around mt-1"
+              style={{ fontSize: "12px", fontWeight: "500" }}
+            >
+              <span>
+                {item.temp_c} <sup>°C</sup>
+              </span>
+              <span>
+                {item.temp_f} <sup>°F</sup>
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+
+      currentDayHour = (
+        <div id={uuid()} className="day-forcast mt-3">
+          {currentDay}
+        </div>
+      );
+    });
+
+    forcast.forEach((item) => {
+      let date = new Date(item.date);
+      let day = weekday[date.getDay()];
+      otherDays.push(
+        <div>
+          <div className="div" id={uuid()}>
+            <span style={{ fontSize: "12px" }}>{day}</span>
+            <img src={item.day.condition.icon} alt="img" id={uuid()} />
+            <span style={{ fontSize: "12px", fontWeight: "500" }}>
+              {item.day.condition.text}
+            </span>
+            <div
+              className="w-100 d-flex flex-row justify-content-around mt-1"
+              style={{ fontSize: "12px", fontWeight: "500" }}
+            >
+              <span>
+                {item.day.maxtemp_c} <sup>°C</sup>
+              </span>
+              <span>
+                {item.day.mintemp_c} <sup>°C</sup>
+              </span>
+            </div>
+          </div>
+        </div>
+      );
+    });
+
+    otherDaysDiv = (
+      <div id={uuid()} className="day-forcast mt-3">
+        {otherDays}
+      </div>
+    );
+  }
+
+  const lastUpdate = new Date(data.current.last_updated);
+  const currentTime = new Date(data.location.localtime);
+
   const last_update_date = `${
-    weekday[date.getDay()]
-  } ${date.toLocaleTimeString()}`;
+    weekday[lastUpdate.getDay()]
+  } ${lastUpdate.toLocaleTimeString()}`;
+
+  const cureent_time = `${
+    weekday[currentTime.getDay()]
+  } ${currentTime.toLocaleTimeString()}`;
 
   const [temperature, setTemperature] = useState("celsius");
 
@@ -29,6 +114,10 @@ function WeatherDetails(props) {
 
   return (
     <div className="details-1">
+      <div className="row mb-3">
+        <div className="col-md-12 text-center">{cureent_time}</div>
+      </div>
+
       <div className="row align-items-center">
         <div className="col-md-6 tempreture">
           <div className="text-center d-flex flex-column align-items-center">
@@ -90,18 +179,23 @@ function WeatherDetails(props) {
       </div>
 
       <div className="row mt-3" style={{ fontSize: "12px" }}>
-        <div className="col-md-6">
+        <div className="col-md-7">
           <span>
             <BiMap style={{ marginRight: "7px" }} />
             {data.location.name}, {data.location.region},{" "}
             {data.location.country}
           </span>
         </div>
-        <div className="col-md-6 d-flex justify-content-end">
+        <div className="col-md-5 d-flex justify-content-end">
           <span>Last Updated: {last_update_date}</span>
         </div>
       </div>
+
       <hr className="mb-1 mt-1"></hr>
+
+      {currentDayHour}
+
+      {otherDaysDiv}
     </div>
   );
 }

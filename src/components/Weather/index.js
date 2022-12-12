@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BiSearchAlt2 } from "react-icons/bi";
+import oops from "../../assets/browser.png";
 import WeatherDetails from "../WeatherDetails/index";
 
 function Weather() {
@@ -16,8 +17,13 @@ function Weather() {
     e.preventDefault();
     try {
       setLoading(true);
+      let url = "";
+      if (tab === "cureent") {
+        url = `${process.env.REACT_APP_API_URL}forcast/cureent/${search}`;
+      } else {
+        url = `${process.env.REACT_APP_API_URL}forcast/${search}/10`;
+      }
 
-      const url = `${process.env.REACT_APP_API_URL}forcast/cureent/${search}`;
       await fetch(url)
         .then((responce) => responce.json())
         .then((data) => {
@@ -84,7 +90,18 @@ function Weather() {
 
         <hr></hr>
 
-        {data ? <WeatherDetails tab={tab} data={data} /> : ""}
+        {data ? (
+          data.error ? (
+            <div className="d-flex flex-column align-items-center">
+              <img className="mb-2" src={oops} alt="oops" />
+              <h2>Opps! Data Not Found</h2>
+            </div>
+          ) : (
+            <WeatherDetails tab={tab} data={data} />
+          )
+        ) : (
+          ""
+        )}
       </div>
     </>
   );

@@ -73,6 +73,44 @@
   border: none;
 }
 
+.weather .weather-inner .details-1 .day-forcast {
+  display: flex;
+  overflow: auto;
+}
+
+.weather .weather-inner .details-1 .day-forcast .div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 110px;
+  border-right: 2px solid #d9d9d9;
+  padding: 0px 10px;
+}
+
+/* width */
+.weather .weather-inner .details-1 .day-forcast::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+/* Track */
+.weather .weather-inner .details-1 .day-forcast::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 5px;
+}
+
+/* Handle */
+.weather .weather-inner .details-1 .day-forcast::-webkit-scrollbar-thumb {
+  background: #fab700;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+.weather .weather-inner .details-1 .day-forcast::-webkit-scrollbar-thumb:hover {
+  background: #fab700;
+}
+
 .weather .weather-inner .details-1 .tempreture {
   display: flex;
   align-items: center;
@@ -88,6 +126,6 @@
   font-size: 4rem;
 }
 
-.weather .weather-inner .details-1other-details{
+.weather .weather-inner .details-1other-details {
   font-size: 13px;
 }
